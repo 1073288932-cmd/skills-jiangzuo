@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>物理教案 Skill 制作分享</title>
+  <style>
+    :root {
+      --bg: #121519;
+      --panel: #1b2026;
+      --panel-2: #222a31;
+      --text: #eef5f7;
+      --muted: #aab8c0;
+      --teal: #33b9ab;
+      --gold: #dca848;
+      --red: #d66a61;
+      --line: #33424a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      max-width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 64px 64px;
+      opacity: .22;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0,0,0,.28), transparent 20%, transparent 80%, rgba(0,0,0,.28));
+    }
+
+    .deck {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 22px;
+      padding: 48px 72px 150px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-color: rgba(51,185,171,.8) rgba(255,255,255,.08);
+      opacity: 0;
+      transform: translateY(18px) scale(.985);
+      pointer-events: none;
+      transition: opacity .34s ease, transform .34s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    h1, h2 {
+      margin: 0;
+      max-width: 1050px;
+      font-weight: 800;
+      line-height: 1.12;
+      overflow-wrap: break-word;
+    }
+
+    h1 { font-size: 50px; }
+    h2 { font-size: 40px; }
+
+    .lead {
+      margin-top: 18px;
+      max-width: 980px;
+      color: var(--muted);
+      font-size: 22px;
+      line-height: 1.55;
+    }
+
+    .content {
+      min-height: 0;
+      display: grid;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .wide {
+      max-width: 1180px;
+    }
+
+    .panel {
+      background: rgba(27,32,38,.92);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px 28px;
+      box-shadow: 0 16px 50px rgba(0,0,0,.24);
+    }
+
+    .panel strong, .accent { color: var(--gold); }
+
+    .quote {
+      font-size: 26px;
+      line-height: 1.58;
+      color: var(--text);
+      border-left: 6px solid var(--teal);
+      padding-left: 24px;
+    }
+
+    .bullets {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 22px;
+      line-height: 1.48;
+    }
+
+    .bullets li {
+      position: relative;
+      padding-left: 34px;
+      color: var(--text);
+    }
+
+    .bullets li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .72em;
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      background: var(--teal);
+    }
+
+    .muted { color: var(--muted); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .flow-line {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .flow-card {
+      position: relative;
+      min-height: 210px;
+      padding: 24px 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .flow-card::after {
+      content: "→";
+      position: absolute;
+      right: -22px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .flow-card:last-child::after {
+      display: none;
+    }
+
+    .flow-card .step-num {
+      margin-bottom: 22px;
+    }
+
+    .flow-card h3 {
+      margin: 0 0 14px;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .flow-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.55;
+    }
+
+    .center-note {
+      margin-top: 26px;
+      padding: 22px 28px;
+      border-left: 6px solid var(--teal);
+      background: rgba(51,185,171,.08);
+      border-radius: 8px;
+      font-size: 23px;
+      line-height: 1.55;
+    }
+
+    .compact-flow-slide .content {
+      align-items: start;
+    }
+
+    .compact-flow-slide .center-note {
+      margin-top: 0;
+      margin-bottom: 10px;
+      padding: 18px 24px;
+      font-size: 21px;
+    }
+
+    .compact-flow-slide .flow-line {
+      gap: 14px;
+    }
+
+    .compact-flow-slide .flow-card {
+      min-height: 170px;
+      padding: 18px 18px;
+    }
+
+    .compact-flow-slide .flow-card h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .compact-flow-slide .flow-card p {
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .compact-flow-slide .flow-card .step-num {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .step {
+      min-height: 200px;
+      padding: 22px 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 20px;
+      background: var(--teal);
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 22px;
+    }
+
+    .step h3, .mini h3 {
+      margin: 0 0 10px;
+      font-size: 23px;
+    }
+
+    .step p, .mini p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .mini {
+      min-height: 168px;
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: rgba(51,185,171,.14);
+      color: var(--teal);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .warning .tag {
+      color: var(--gold);
+      background: rgba(220,168,72,.14);
+    }
+
+    .example {
+      display: grid;
+      gap: 14px;
+      font-size: 20px;
+      line-height: 1.58;
+    }
+
+    .example .line {
+      padding: 14px 18px;
+      background: var(--panel-2);
+      border-left: 4px solid var(--teal);
+      border-radius: 6px;
+    }
+
+    .image-frame {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #0f1216;
+    }
+
+    .image-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .bad { border-color: rgba(214,106,97,.75); }
+    .good { border-color: rgba(51,185,171,.75); }
+
+    .bad .tag { color: var(--red); background: rgba(214,106,97,.14); }
+    .good .tag { color: var(--teal); background: rgba(51,185,171,.14); }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      border-color: var(--teal);
+      background: rgba(51,185,171,.16);
+      color: #fff;
+    }
+
+    .tab-body {
+      display: none;
+      font-size: 22px;
+      line-height: 1.65;
+    }
+
+    .tab-body.active { display: block; }
+
+    .code {
+      font-family: Consolas, "Microsoft YaHei", monospace;
+      background: #0d1014;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      font-size: 19px;
+      line-height: 1.55;
+      color: #dbe7ea;
+      white-space: pre-wrap;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 5;
+      left: 48px;
+      right: 48px;
+      bottom: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      background: rgba(13,16,20,.88);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 42px rgba(0,0,0,.34);
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.1);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transition: width .28s ease;
+    }
+
+    .btn {
+      height: 44px;
+      min-width: 92px;
+      padding: 0 18px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(27,32,38,.9);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .btn:hover, .tab:hover {
+      border-color: var(--teal);
+    }
+
+    .counter {
+      min-width: 92px;
+      color: var(--muted);
+      font-size: 18px;
+      text-align: right;
+    }
+
+    .note {
+      position: fixed;
+      z-index: 6;
+      right: 72px;
+      bottom: 84px;
+      width: min(540px, calc(100vw - 144px));
+      max-height: 48vh;
+      overflow: auto;
+      padding: 20px 22px;
+      border-radius: 8px;
+      background: #f4f7f8;
+      color: #172028;
+      box-shadow: 0 18px 60px rgba(0,0,0,.38);
+      display: none;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .note.open { display: block; }
+
+    .kbd {
+      color: var(--text);
+      font-size: 17px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      html, body { overflow: hidden; }
+      .deck { height: 100vh; min-height: 100vh; }
+      .slide {
+        position: absolute;
+        inset: 0;
+        min-height: 100vh;
+        display: none;
+        padding: 30px 20px 170px;
+        overflow-y: auto;
+      }
+      .slide.active { display: grid; }
+      h1 { font-size: 34px; }
+      h2 { font-size: 30px; }
+      .lead, .bullets { font-size: 19px; }
+      .quote { font-size: 22px; }
+      .two-col, .compare, .mini-grid, .steps, .flow-line { grid-template-columns: 1fr; }
+      .flow-card::after { display: none; }
+      .nav {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        grid-template-columns: 1fr auto auto;
+        gap: 8px;
+        padding: 10px;
+      }
+      .kbd {
+        grid-column: 1 / -1;
+        font-size: 14px;
+        color: var(--text);
+      }
+      .progress {
+        grid-column: 1 / -1;
+        height: 7px;
+      }
+      .btn {
+        min-width: 84px;
+        height: 42px;
+        font-size: 16px;
+      }
+      .counter { min-width: 70px; font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide active" data-note="开场先说明分享定位：不是炫技，不是展示 AI 多聪明，而是讲一个复杂教学任务如何被做成稳定流程。">
+      <header>
+        <div class="eyebrow">AI 教研工具制作分享</div>
+        <h1>把复杂教案生成任务，做成稳定可复用的 Skill</h1>
+        <p class="lead">这次分享不是介绍 AI 有多聪明，而是介绍如何把一个反复使用、要求复杂、容易出错的教学任务，封装成可以重复执行的教学工作流。</p>
+      </header>
+      <div class="content two-col">
+        <div class="panel quote">我不是让 AI 临时帮我写一份教案，而是把“AI 怎么读材料、怎么问我、怎么生成、怎么校验、怎么输出 Word 模板”的全过程固定下来。</div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>反复使用：每次都能按同一流程启动。</li>
+            <li>要求复杂：格式、教材、目标、问题链、评价都要管。</li>
+            <li>容易出错：把常见错误写成禁令和脚本。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide compact-flow-slide" data-note="这一页先讲最终要解决的问题，让听众知道这个 Skill 到底能做什么。">
+      <header>
+        <div class="eyebrow">01 最终解决什么问题</div>
+        <h2>从上传材料到生成 Word 教案</h2>
+        <p class="lead">这个 Skill 最终服务于一个很具体的场景：教师给一份 Word 教案或课堂逐字稿，AI 按固定模板生成完整教案。</p>
+      </header>
+      <div class="content">
+        <div class="center-note">输出内容必须符合“常态好课”观察点、物理核心素养、目标—任务—评价一致等要求。</div>
+        <div class="flow-line">
+          <div class="flow-card"><span class="step-num">1</span><h3>上传材料</h3><p>教师上传 Word 教案或课堂逐字稿。</p></div>
+          <div class="flow-card"><span class="step-num">2</span><h3>读取依据</h3><p>AI 读取源教案，并提取教材对应章节。</p></div>
+          <div class="flow-card"><span class="step-num">3</span><h3>确认设计</h3><p>先确认学习目标，再确认深度问题链。</p></div>
+          <div class="flow-card"><span class="step-num">4</span><h3>嵌入过程</h3><p>把确认后的目标和问题链嵌入教学过程。</p></div>
+          <div class="flow-card"><span class="step-num">5</span><h3>输出 Word</h3><p>按固定 Word 模板填满完整教案。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里进入为什么要做。强调它看似是写教案，实际有很多隐性要求。">
+      <header>
+        <div class="eyebrow">02 为什么要做这个 Skill</div>
+        <h2>这个任务看似是“写教案”，实际是系统工程</h2>
+      </header>
+      <div class="content mini-grid">
+        <div class="mini"><span class="tag">格式</span><h3>不能错</h3><p>必须使用原来的 Word 空白表格模板，不能重新画一个看起来差不多的表格。</p></div>
+        <div class="mini"><span class="tag">内容</span><h3>不能泛</h3><p>不能写通用套话，必须结合源教案和教材对应章节。</p></div>
+        <div class="mini"><span class="tag">流程</span><h3>不能乱</h3><p>目标确认后才能生成问题链，问题链确认后才能生成完整教案。</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页把隐性要求继续讲完整：目标、问题链、课堂语言、技术稳定性。">
+      <header>
+        <div class="eyebrow">03 复杂要求从哪里来</div>
+        <h2>真正难的，是把教学标准说清楚</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>学习目标覆盖四个核心素养维度。</li>
+            <li>每条目标体现主体、表现、条件、程度。</li>
+            <li>问题链要串起整节课，而不是列十个问题。</li>
+            <li>教学过程要像真实课堂，包含组织、操作、巡视、追问、反馈和过渡。</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>Claude Code 不能每次都试错找文件。</li>
+            <li>不能依赖不可用的 pandoc 或慢速 PDF 定位。</li>
+            <li>不能让 PowerShell 中文路径和 JSON 引号反复报错。</li>
+            <li>技术上也要稳定、可复现、可检查。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这一页是总论。把整个 Skill 的核心价值收束成一句话。">
+      <header>
+        <div class="eyebrow">04 核心定位</div>
+        <h2>不是让 AI 写一篇文章，而是让标准变成流程</h2>
+      </header>
+      <div class="content">
+        <div class="panel quote">这个 Skill 的核心不是“让 AI 写教案”，而是把教师的教案生成标准，变成一套可执行、可校验、可复用的流程。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="开始讲最终工作流。这里按实际执行顺序讲，不要跳。">
+      <header>
+        <div class="eyebrow">05 最终工作流</div>
+        <h2>第一步：快速读取输入材料</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>先运行 <strong>prepare_lesson_inputs.ps1</strong>。</li>
+            <li>精确定位用户给出的 docx 文件。</li>
+            <li>用 OOXML 方式读取 Word。</li>
+            <li>从教案标题或正文识别课题。</li>
+          </ul>
+        </div>
+        <div class="code">输入材料不是直接交给 AI 猜。
+先让脚本把文件、文本、课题和教材章节准备好，
+后面生成才有可靠依据。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="继续讲读取：源教案抽取和教材抽取是两个依据来源。">
+      <header>
+        <div class="eyebrow">06 最终工作流</div>
+        <h2>第二步：抽取源教案与教材章节</h2>
+      </header>
+      <div class="content compare">
+        <div class="panel good">
+          <span class="tag">源教案</span>
+          <ul class="bullets">
+            <li>课题、年级、教材版本、课时。</li>
+            <li>学情、重难点、教学活动。</li>
+            <li>实验设计、板书、作业等。</li>
+          </ul>
+        </div>
+        <div class="panel good">
+          <span class="tag">教材章节</span>
+          <ul class="bullets">
+            <li>根据课题快速定位教材 Markdown。</li>
+            <li>例如《重力 力的示意图》直接抽取 1249-1444 行。</li>
+            <li>不扫描整本教材，节省时间。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="这里讲两个确认点。目标和问题链必须停下来给教师看。">
+      <header>
+        <div class="eyebrow">07 最终工作流</div>
+        <h2>第三步：先确认目标，再确认问题链</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <span class="tag">学习目标确认</span>
+          <ul class="bullets">
+            <li>覆盖物理观念、科学思维、科学探究、科学态度与责任。</li>
+            <li>每条目标检查四要素。</li>
+            <li>教师修改后，后续全部以修改版为准。</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <span class="tag">问题链确认</span>
+          <ul class="bullets">
+            <li>包括核心、递进、探究、过渡、迁移问题链。</li>
+            <li>问题链是课堂主线。</li>
+            <li>确认后的问题必须进入教学过程。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="讲完整生成不是直接写 Word，而是先结构化，再校验，再填模板。">
+      <header>
+        <div class="eyebrow">08 最终工作流</div>
+        <h2>第四步：生成 JSON、校验，再填入 Word 模板</h2>
+      </header>
+      <div class="content">
+        <div class="flow-line">
+          <div class="flow-card"><span class="step-num">1</span><h3>整理数据</h3><p>把完整教案写入 lesson-data.json。</p></div>
+          <div class="flow-card"><span class="step-num">2</span><h3>运行校验</h3><p>检查必填字段、活动锚点、问题锚点、师生互动。</p></div>
+          <div class="flow-card"><span class="step-num">3</span><h3>复制模板</h3><p>不重画表格，只复制原 Word 模板。</p></div>
+          <div class="flow-card"><span class="step-num">4</span><h3>填入表格</h3><p>把确认后的内容写入既有单元格。</p></div>
+          <div class="flow-card"><span class="step-num">5</span><h3>检查输出</h3><p>确认仍是 3 个表格，模板结构没有被破坏。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="从这里开始讲迭代。先告诉听众：Skill 是被真实错误磨出来的。">
+      <header>
+        <div class="eyebrow">09 迭代思路</div>
+        <h2>这个 Skill 不是一次写成的</h2>
+      </header>
+      <div class="content">
+        <div class="panel quote">真正重要的过程是：发现问题，修正规则，增加脚本，再测试。每一次失败，都要沉淀为下一版的禁令、规则或工具。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段一：不要上来就写教案，先把任务阶段说清楚。">
+      <header>
+        <div class="eyebrow">10 阶段一</div>
+        <h2>先把需求说清楚</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>使用模板 Word 输出。</li>
+            <li>教学过程符合常态好课。</li>
+            <li>学习目标覆盖四个核心素养。</li>
+            <li>至少设计 10 个深度问题。</li>
+            <li>先确认目标，再确认问题链，再生成完整教案。</li>
+          </ul>
+        </div>
+        <div class="panel quote">关键经验：不要一上来让 AI “帮我写教案”，而要先告诉它整个任务如何分阶段完成。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段二：模板是最容易出错的地方。必须讲清楚不要重画表。">
+      <header>
+        <div class="eyebrow">11 阶段二</div>
+        <h2>固定输出模板</h2>
+      </header>
+      <div class="content compare">
+        <div class="panel bad">
+          <span class="tag">问题</span>
+          <h3>AI 自己画表格</h3>
+          <p class="lead">结构、合并单元格、行高列宽都可能和原模板不一样。</p>
+        </div>
+        <div class="panel good">
+          <span class="tag">修正</span>
+          <h3>复制模板再填表</h3>
+          <p class="lead">NEVER create a new table。必须复制模板副本，并运行 fill_lesson_template.ps1。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段三：教材 PDF 慢，Markdown 加章节索引快。">
+      <header>
+        <div class="eyebrow">12 阶段三</div>
+        <h2>解决教材读取慢的问题</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>最初使用 PDF，精确定位章节很慢。</li>
+            <li>后来把教材转成 Markdown。</li>
+            <li>再封装图片文件夹和教材文件。</li>
+            <li>最后增加章节索引和固定行段抽取。</li>
+          </ul>
+        </div>
+        <div class="code">示例：
+gravity-force-diagram：1249-1444 行
+pressure：2472-2670 行
+liquid-pressure：2671-2800 行
+
+经验：常用教材要做章节索引。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段四：docx 读取要给唯一正确路径，不能让 AI 每次试工具。">
+      <header>
+        <div class="eyebrow">13 阶段四</div>
+        <h2>解决 docx 读取问题</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>NEVER try pandoc。</li>
+            <li>NEVER use mammoth。</li>
+            <li>NEVER write inline PowerShell extraction code。</li>
+            <li>必须使用内置脚本 extract_docx_text.ps1。</li>
+          </ul>
+        </div>
+        <div class="panel quote">关键经验：不要让 AI 每次“想办法读取 docx”。直接告诉它唯一正确路径：docx 本质是 zip，读取 word/document.xml。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段五：长中文 JSON 不能直接塞命令行。这个坑小白也容易遇到。">
+      <header>
+        <div class="eyebrow">14 阶段五</div>
+        <h2>解决 JSON 和 PowerShell 解析问题</h2>
+      </header>
+      <div class="content compare">
+        <div class="panel bad">
+          <span class="tag">错误做法</span>
+          <p class="lead">把完整 JSON 直接写进 PowerShell 命令行，遇到中文引号、换行、反斜杠就容易失败。</p>
+        </div>
+        <div class="panel good">
+          <span class="tag">正确做法</span>
+          <p class="lead">先写成 UTF-8 JSON 文件，再把文件路径传给校验脚本和填表脚本。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段六：教学过程僵硬是内容质量问题，需要风格规则和校验。">
+      <header>
+        <div class="eyebrow">15 阶段六</div>
+        <h2>解决教学过程僵硬问题</h2>
+      </header>
+      <div class="content">
+        <div class="panel example">
+          <div class="line"><strong>不能这样：</strong>师：什么是重力？生：重力是……师：方向怎样？生：竖直向下。</div>
+          <div class="line"><strong>必须这样：</strong>保留“活动一”“核心问题1”等核对锚点，同时写出情境铺垫、学生观察、操作记录、教师巡视、追问反馈和过渡提升。</div>
+          <div class="line"><strong>关键经验：</strong>不要只说“生动一点”，要明确什么算生动具体，什么绝对不允许。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段七：问题链质量升级。这里可以强调论文和案例不是复制，而是提取设计原则。">
+      <header>
+        <div class="eyebrow">16 阶段七</div>
+        <h2>解决问题链不够深的问题</h2>
+      </header>
+      <div class="content">
+        <div class="tabs" data-tabs>
+          <button class="tab active" data-tab="core">核心问题</button>
+          <button class="tab" data-tab="progress">递进型问题</button>
+          <button class="tab" data-tab="inquiry">探究型问题</button>
+          <button class="tab" data-tab="transition">过渡型问题</button>
+          <button class="tab" data-tab="transfer">迁移型问题</button>
+        </div>
+        <div class="panel tab-body active" data-body="core"><strong>核心问题：</strong>统领整节课或一个关键概念，决定课堂的学习方向。</div>
+        <div class="panel tab-body" data-body="progress"><strong>递进型问题：</strong>让学生从现象、经验逐步走向概念、规律和表达。</div>
+        <div class="panel tab-body" data-body="inquiry"><strong>探究型问题：</strong>引导学生选择器材、设计过程、收集证据、得出结论。</div>
+        <div class="panel tab-body" data-body="transition"><strong>过渡型问题：</strong>连接前后环节，让课堂推进自然，不是硬切换。</div>
+        <div class="panel tab-body" data-body="transfer"><strong>迁移型问题：</strong>把新知识放到新情境中使用，检查学生是否真正理解。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="阶段八：活动定义。AI 不一定懂教学设计里的活动是什么，所以必须给边界。">
+      <header>
+        <div class="eyebrow">17 阶段八</div>
+        <h2>解决活动数量过多问题</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>活动是让学生想一想、做一做，促进核心素养发展的学生中心任务。</li>
+            <li>一节课主要活动不超过 5 个。</li>
+            <li>知识回顾、情感升华、练习巩固、课堂小结、作业布置不算活动。</li>
+            <li>实验方案、操作、记录、分析、结论是同一活动内部环节。</li>
+          </ul>
+        </div>
+        <div class="panel quote">关键经验：要把教育概念定义清楚。AI 不一定知道“活动”在教学设计中是什么意思。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="从这里进入总结原则。原则一是先流程后内容。">
+      <header>
+        <div class="eyebrow">18 核心原则一</div>
+        <h2>先设计流程，再生成内容</h2>
+      </header>
+      <div class="content">
+        <div class="flow-line">
+          <div class="flow-card"><span class="step-num">1</span><h3>读取材料</h3><p>先把源文件和教材依据准备好。</p></div>
+          <div class="flow-card"><span class="step-num">2</span><h3>生成目标</h3><p>目标先出来，先确认。</p></div>
+          <div class="flow-card"><span class="step-num">3</span><h3>生成问题链</h3><p>问题链再出来，再确认。</p></div>
+          <div class="flow-card"><span class="step-num">4</span><h3>完整生成</h3><p>把确认内容嵌入教学过程。</p></div>
+          <div class="flow-card"><span class="step-num">5</span><h3>校验输出</h3><p>最后填模板、查完整性。</p></div>
+        </div>
+        <div class="center-note">复杂任务最怕一步到位。一步到位看似省事，实际返工最多。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="原则二：多写禁令，并且写原因。">
+      <header>
+        <div class="eyebrow">19 核心原则二</div>
+        <h2>多写 NEVER 和 DO NOT，并说明原因</h2>
+      </header>
+      <div class="content mini-grid">
+        <div class="mini warning"><span class="tag">NEVER</span><h3>rebuild the table</h3><p>原因：重建表格会破坏合并单元格、行高列宽和 WPS 显示效果。</p></div>
+        <div class="mini warning"><span class="tag">NEVER</span><h3>scan full textbook</h3><p>原因：全书扫描耗时长，且容易定位不准。</p></div>
+        <div class="mini warning"><span class="tag">DO NOT</span><h3>write rigid Q&A</h3><p>原因：机械问答不能呈现真实课堂的组织、探究、反馈和提升。</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="原则三：脚本稳定执行，AI 负责生成和判断。">
+      <header>
+        <div class="eyebrow">20 核心原则三</div>
+        <h2>能用脚本固定的，不要靠 AI 临时发挥</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>prepare_lesson_inputs.ps1</li>
+            <li>extract_docx_text.ps1</li>
+            <li>extract_textbook_section.ps1</li>
+            <li>validate_lesson_json.ps1</li>
+            <li>fill_lesson_template.ps1</li>
+          </ul>
+        </div>
+        <div class="panel quote">AI 擅长生成和判断，脚本擅长稳定执行。好的 Skill 要让它们各做擅长的事。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="原则四：好样例不能只让 AI 表面模仿，要拆成规则。">
+      <header>
+        <div class="eyebrow">21 核心原则四</div>
+        <h2>把高质量样例转化为规则</h2>
+      </header>
+      <div class="content two-col">
+        <div class="panel">
+          <ul class="bullets">
+            <li>情境铺垫</li>
+            <li>认知冲突</li>
+            <li>学生猜想</li>
+            <li>实验设计</li>
+            <li>教师巡视</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <ul class="bullets">
+            <li>数据展示</li>
+            <li>异常分析</li>
+            <li>归纳提升</li>
+            <li>迁移应用</li>
+            <li>真实反馈</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="原则五：教师确认权是关键，不是可有可无。">
+      <header>
+        <div class="eyebrow">22 核心原则五</div>
+        <h2>保留人的确认权</h2>
+      </header>
+      <div class="content">
+        <div class="panel quote">Skill 不是替代教师判断，而是把教师判断放在关键节点上。目标错了，后面都会偏；问题链不满意，教学过程再详细也不是想要的课。</div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="原则六：失败要固化。这一页是很好的总结页。">
+      <header>
+        <div class="eyebrow">23 核心原则六</div>
+        <h2>每次失败都要变成规则或脚本</h2>
+      </header>
+      <div class="content">
+        <div class="panel example">
+          <div class="line">Claude 自己画表格 → 必须复制模板并填表。</div>
+          <div class="line">PDF 读取太慢 → 教材改为 Markdown，并增加章节映射。</div>
+          <div class="line">pandoc 不可用 → 禁止 pandoc，改用 OOXML 脚本。</div>
+          <div class="line">JSON 解析失败 → JSON 写文件，传路径。</div>
+          <div class="line">教学过程僵硬 → 增加风格规则和校验。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-note="最后收束。强调好 Skill 是被真实任务磨出来的。">
+      <header>
+        <div class="eyebrow">24 结语</div>
+        <h2>好 Skill 不是一次写出来的，而是被真实错误磨出来的</h2>
+      </header>
+      <div class="content">
+        <div class="panel quote">当我们把模板、教材、标准、确认节点和常见错误都固化下来，AI 才能从“偶尔好用”变成“稳定可用”。</div>
+        <p class="lead">教师负责判断什么是好课；Skill 负责把这些判断变成可重复执行的工作流程。</p>
+      </div>
+    </section>
+  </main>
+
+  <aside class="note" id="note"></aside>
+
+  <nav class="nav" aria-label="演示导航">
+    <div class="kbd">提示：本页内容可上下滚动；← / → 或按钮翻页；N 查看讲解提示</div>
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+    <button class="btn" id="prev" aria-label="上一页">上一页</button>
+    <button class="btn" id="next" aria-label="下一页">下一页</button>
+    <div class="counter" id="counter">01 / 25</div>
+  </nav>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const progress = document.getElementById('progress');
+    const counter = document.getElementById('counter');
+    const note = document.getElementById('note');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    let index = 0;
+
+    function pad(num) {
+      return String(num).padStart(2, '0');
+    }
+
+    function render() {
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+      counter.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
+      note.textContent = slides[index].dataset.note || '';
+      note.classList.remove('open');
+      slides[index].scrollTo({ top: 0, behavior: 'auto' });
+    }
+
+    function go(delta) {
+      index = Math.max(0, Math.min(slides.length - 1, index + delta));
+      render();
+    }
+
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown') go(1);
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') go(-1);
+      if (event.key.toLowerCase() === 'n') note.classList.toggle('open');
+      if (event.key === 'Home') { index = 0; render(); }
+      if (event.key === 'End') { index = slides.length - 1; render(); }
+    });
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (event) => {
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        go(dx < 0 ? 1 : -1);
+      }
+    }, { passive: true });
+
+    document.querySelectorAll('[data-tabs]').forEach((tabGroup) => {
+      const slide = tabGroup.closest('.slide');
+      const tabs = Array.from(tabGroup.querySelectorAll('.tab'));
+      const bodies = Array.from(slide.querySelectorAll('.tab-body'));
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const id = tab.dataset.tab;
+          tabs.forEach((t) => t.classList.toggle('active', t === tab));
+          bodies.forEach((body) => body.classList.toggle('active', body.dataset.body === id));
+        });
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
